@@ -5,6 +5,9 @@ import pandas as pd
 import os
 
 
+st.set_page_config(page_title="Acompanhamento de Carteira de Ações", page_icon="📈", layout="wide")
+
+
 @st.cache_data
 def carregar_dados(empresas):
     texto_tickers = " ".join(empresas)
