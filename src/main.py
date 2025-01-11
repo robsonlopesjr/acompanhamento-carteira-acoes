@@ -76,9 +76,19 @@ elif len(lista_acoes) == 1:
 for acao in lista_acoes:
     performance_acao = dados[acao].iloc[-1] / dados[acao].iloc[0] - 1
     performance_acao = float(performance_acao)
-    texto_performance_ativos = (
-        texto_performance_ativos + f"  \n{acao}: {performance_acao:.1%}"
-    )
+
+    if performance_acao > 0:
+        texto_performance_ativos = (
+            texto_performance_ativos + f"  \n{acao}: :green[{performance_acao:.1%}]"
+        )
+    elif performance_acao < 0:
+        texto_performance_ativos = (
+            texto_performance_ativos + f"  \n{acao}: :red[{performance_acao:.1%}]"
+        )
+    else:
+        texto_performance_ativos = (
+            texto_performance_ativos + f"  \n{acao}: {performance_acao:.1%}"
+        )
 
 st.write(
     f"""
