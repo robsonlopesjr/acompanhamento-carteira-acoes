@@ -62,7 +62,7 @@ intervalo_datas = st.sidebar.slider(
     step=timedelta(days=1),
 )
 
-dados = dados.loc[intervalo_datas[0]:intervalo_datas[1]]
+dados = dados.loc[intervalo_datas[0] : intervalo_datas[1]]
 
 st.line_chart(data=dados)
 
@@ -73,9 +73,15 @@ if len(lista_acoes) == 0:
 elif len(lista_acoes) == 1:
     dados = dados.rename(columns={"Close": acao_unica})
 
-for acao in lista_acoes:
+
+carteira = [1000 for acao in lista_acoes]
+total_inicial_carteira = sum(carteira)
+
+for i, acao in enumerate(lista_acoes):
     performance_acao = dados[acao].iloc[-1] / dados[acao].iloc[0] - 1
     performance_acao = float(performance_acao)
+
+    carteira[i] = carteira[i] * (1 + performance_acao)
 
     if performance_acao > 0:
         texto_performance_ativos = (
@@ -90,11 +96,29 @@ for acao in lista_acoes:
             texto_performance_ativos + f"  \n{acao}: {performance_acao:.1%}"
         )
 
+total_final_carteira = sum(carteira)
+performance_carteira = total_final_carteira / total_inicial_carteira - 1
+
+
+if performance_carteira > 0:
+    texto_performance_carteira = f"Performance da carteira com todos os ativos: :green[{performance_carteira:.1%}]"
+elif performance_carteira < 0:
+    texto_performance_carteira = (
+        f"Performance da carteira com todos os ativos: :red[{performance_carteira:.1%}]"
+    )
+else:
+    texto_performance_carteira = (
+        f"Performance da carteira com todos os ativos: {performance_carteira:.1%}"
+    )
+
+
 st.write(
     f"""
 ### Performance dos Ativos
 Essa foi a performance de cada ativo no período selecionado:
 
 {texto_performance_ativos}
+
+{texto_performance_carteira}
 """
 )
